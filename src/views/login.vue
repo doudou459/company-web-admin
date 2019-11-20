@@ -1,5 +1,5 @@
 <template>
-<div class="contentDiv">
+<div class="contentDiv" :style='{"height":this.$store.state.clientHeight+"px"}'>
   <div class="loginWeb">
     <el-form :model="user" label-width="50px" class="demo-ruleForm">
       <el-form-item label="账号" prop="loginID">
@@ -8,9 +8,10 @@
       <el-form-item label="密码" prop="loginKey">
         <el-input type="password" v-model="user.loginKey" autocomplete="off"></el-input>
       </el-form-item>
-       <el-button type="primary"  @click="submitForm">登录</el-button>
+       <el-button type="success" @click="submitForm">登录</el-button>
     </el-form>
   </div>
+
   </div>
 </template>
 
@@ -27,26 +28,60 @@ export default {
   },
   methods:{
     submitForm:function(){
-      console.log(this.user.loginID);
-      console.log(this.$md5(this.user.loginKey));
+      let me = this;
+     this.$ajax.post(this.$store.state.loginUrl,{
+       loginID:this.user.loginID,
+       loginKey:this.$md5(this.user.loginKey)  
+     }).then(function(res){
+        if(res.data.result=="success"){
+          me.$store.commit('setUser',{loginID:me.user.loginID,loginTime:res.data.loginTime})
+          me.$message({
+          showClose: true,
+          message: '登录成功',
+          type: 'success'
+        });
+        }else if(res.data.result=="wrongKey"){
+          me.$message({
+          showClose: true,
+          message: '密码错误'+res.data.wrongTime+"次",
+          type: 'warning'
+        });
+        }else if(res.data.result=="wrongTimeFull"){
+          me.$message({
+          showClose: true,
+          message: "密码连续错误5次，请明日再试",
+          type: 'warning'
+        });
+        }else {
+          me.$message({
+          showClose: true,
+          message: '账号错误',
+          type: 'warning'
+        });
+        }        
+     }).catch(function(error){
+          me.$message({
+          showClose: true,
+          message: error,
+          type: 'error'
+        });
+     })
     }
   }
 }
 </script>
 <style scoped>
 .contentDiv{
-  height: 100%;
-  min-height: 650px;
   display: flex;
   align-items: center; /*定义元素垂直居中*/
   justify-content: center; /*定义元素水平居中*/
 }
 .loginWeb{
   width: 100%;
-  max-width: 500px;
+  max-width: 360px;
   text-align: center;
   padding:50px 30px 30px 30px;
-  background-color: azure;
+  background-color:cadetblue;
   border-radius: 20px;
 }
 
