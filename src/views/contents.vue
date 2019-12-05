@@ -2,19 +2,20 @@
 <el-container>
   <el-aside width="200px"  :style='{"height":this.$store.state.clientHeight+"px"}'>
 <el-menu
-  default-active="setIndex"
+  :default-active="navigation[0]['router']"
   class="el-menu-demo"
   mode="vertical"
   background-color="#545c64"
   text-color="#fff"
   active-text-color="#ffd04b"
-  router="true">
-  <el-menu-item  v-for="item in navigation" v-bind:key="item.name"  v-bind:index="item.router">{{item.name}}</el-menu-item>
+  router="true"
+  :style='{"height":this.$store.state.clientHeight+"px"}'>
+  <el-menu-item  v-for="item in navigation" v-bind:key="item.name" v-on:click="setTitle(item.name)"  v-bind:index="item.router">{{item.name}}</el-menu-item>
 </el-menu>
 
   </el-aside>
   <el-main :style='{"height":this.$store.state.clientHeight+"px"}'>
-    <el-header>Header</el-header>
+    <el-header>{{titleName}}</el-header>
     <router-view></router-view>
   </el-main>
 </el-container>
@@ -27,25 +28,28 @@ export default {
       navigation:[
         {
           name:"首页图片",
-          router:"setIndex"
+          router:"/contents/setIndex"
         },
         {
           name:"产品服务",
-          router:"setProduce" 
+          router:"/contents/setProduce" 
         },
         {
           name:"在线体验",
-          router:"setExample"  
+          router:"/contents/setExample"  
         },
         {
           name:"联系方式",
-          router:"setContact"  
+          router:"/contents/setContact"  
         }
-      ]
+      ],
+      titleName:"首页图片"
     }
   },
   methods:{
-
+    setTitle:function(titleName){
+     this.titleName=titleName;
+    }
   }
 }
 </script>
@@ -67,8 +71,8 @@ export default {
   }
 
     .el-header{
-    background-color: #B3C0D1;
-    color: #333;
+    background-color: #545c64;
+    color: #ffffff;
     text-align: center;
     line-height: 60px;
   }
