@@ -9,11 +9,11 @@ import setContact from '../views/setContact.vue'
 Vue.use(VueRouter)
 
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'login',
-  //   component: login
-  // },
+  {
+    path: '/',
+    name: 'login',
+    component: login
+  },
   {
     path:'/contents',
     name:'contents',

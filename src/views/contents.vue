@@ -8,7 +8,7 @@
   background-color="#545c64"
   text-color="#fff"
   active-text-color="#ffd04b"
-  router="true"
+  router
   :style='{"height":this.$store.state.clientHeight+"px"}'>
   <el-menu-item  v-for="item in navigation" v-bind:key="item.name" v-on:click="setTitle(item.name)"  v-bind:index="item.router">{{item.name}}</el-menu-item>
 </el-menu>
