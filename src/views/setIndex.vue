@@ -5,14 +5,14 @@
         <h3>设置轮播图</h3>
         <el-row type="flex">
           <el-col :span="4">
-            <el-button type="primary">新增</el-button>
-            <el-button type="warning">删除</el-button>
+            <el-button @click="addCarousel" type="primary">新增</el-button>
+            <el-button @click="deleteCarousel=deleteCarousel?false:true" type="warning">删除</el-button>
             <el-button type="info">保存</el-button>
           </el-col>
         </el-row>
       </div>
       <el-row :gutter="20" class="carousel_imgRow">
-        <el-col v-for="item in carousel_img" v-bind:key="item.ID" :span="8">    
+        <el-col v-for="(item,index) in carousel_img" v-bind:key="item.ID" :span="8">    
           <el-row :gutter="10" class="imgTitleRow" >
             <el-col :span="18">
               <el-row>
@@ -24,10 +24,13 @@
                 </el-col>
               </el-row>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="4">
               <el-select v-model="item.showType" placeholder="请选择" class="deviceSelect">
                 <el-option v-for="op in device" :key="op.value" :label="op.label" :value="op.value"></el-option>
               </el-select>
+            </el-col>
+            <el-col :span="2" v-show="deleteCarousel">
+              <el-button icon="el-icon-close"   size="mini" circle class="deleteBtn" @click="deleteCarouselImg(index)" ></el-button>
             </el-col>
           </el-row>
            <el-image class="carousel_img" :src="item.url" fit="cover"></el-image>
@@ -37,8 +40,8 @@
         <h3>设置主页图</h3>
         <el-row type="flex">
           <el-col :span="4">
-            <el-button type="primary">新增</el-button>
-            <el-button type="warning">删除</el-button>
+            <el-button @click="addIndexImg" type="primary">新增</el-button>
+            <el-button @click="deleteIndexImg=deleteIndexImg?false:true" type="warning">删除</el-button>
             <el-button type="info">保存</el-button>
           </el-col>
         </el-row>
@@ -49,8 +52,11 @@
                 <el-col class="inputSpan" :span="3">
                  <span >标题：</span>
                 </el-col>
-                <el-col :span="21">
+                <el-col :span="19">
                   <el-input v-model="item.title" placeholder="请输入内容"></el-input>
+                </el-col>
+                <el-col :span="2" v-show="deleteIndexImg">
+              <el-button icon="el-icon-close"   size="mini" circle class="deleteBtn" @click="deleteIndexImg(index)" ></el-button>
                 </el-col>
               </el-row>
            <el-image class="index_img" :src="item.url" fit="cover"></el-image>
@@ -75,8 +81,36 @@ export default {
           value: "m",
           label: "移动端"
         }
-      ]
+      ],
+      deleteCarousel:false,
+      deleteIndexImgs:false,
     };
+  },
+  methods:{
+    addCarousel:function(){
+      let newImg = {
+        "ID":new Date().getTime(),
+        "showType":"pc",
+        "title":"",
+        "url":""
+      }
+      this.carousel_img.push(newImg);
+    },
+    deleteCarouselImg:function(index){
+    this.carousel_img.splice(index,1);
+
+    },
+    addIndexImg:function(){
+      let newImg = {
+        "ID":new Date().getTime(),
+        "title":"",
+        "url":""
+      }
+      this.index_img.push(newImg);
+    },
+    deleteIndexImg:function(index){
+      this.index_img.splice(index,1);
+    }
   },
   created() {
     let me = this;
@@ -150,5 +184,16 @@ export default {
     /* max-height: 600px;
     overflow-y: scroll; */
     border-bottom-color:#545c64;
+}
+.deleteBtn{
+  margin-top:5px;
+  margin-left: 10px;
+  color: red!important;
+  font-size: 14px;
+  background-color:#E9EEF3;
+  border: #E9EEF3;
+}
+.deleteBtn:active,.deleteBtn:hover{
+  background-color:orange;
 }
 </style>
