@@ -7,12 +7,12 @@
           <el-col :span="4">
             <el-button @click="addCarousel" type="primary">新增</el-button>
             <el-button @click="deleteCarousel=deleteCarousel?false:true" type="warning">删除</el-button>
-            <el-button type="info">保存</el-button>
+            <el-button @click="saveCarousels" type="info">保存</el-button>
           </el-col>
         </el-row>
       </div>
       <el-row :gutter="20" class="carousel_imgRow">
-        <el-col v-for="(item,index) in carousel_img" v-bind:key="item.ID" :span="8">    
+        <el-col v-for="item in carousel_img.datas" v-bind:key="item.ID" :span="8">    
           <el-row :gutter="10" class="imgTitleRow" >
             <el-col :span="18">
               <el-row>
@@ -30,7 +30,7 @@
               </el-select>
             </el-col>
             <el-col :span="2" v-show="deleteCarousel">
-              <el-button icon="el-icon-close"   size="mini" circle class="deleteBtn" @click="deleteCarouselImg(index)" ></el-button>
+              <el-button icon="el-icon-close"   size="mini" circle class="deleteBtn" @click="deleteCarouselImg(item.ID)" ></el-button>
             </el-col>
           </el-row>
            <el-image class="carousel_img" :src="item.url" fit="cover"></el-image>
@@ -41,13 +41,13 @@
         <el-row type="flex">
           <el-col :span="4">
             <el-button @click="addIndexImg" type="primary">新增</el-button>
-            <el-button @click="deleteIndexImg=deleteIndexImg?false:true" type="warning">删除</el-button>
+            <el-button @click="deleteIndexImgs=deleteIndexImgs?false:true" type="warning">删除</el-button>
             <el-button type="info">保存</el-button>
           </el-col>
         </el-row>
       </div>
       <el-row :gutter="20" >
-        <el-col v-for="item in index_img" v-bind:key="item.ID" :span="8">    
+        <el-col v-for="item in index_img.datas" v-bind:key="item.ID" :span="8">    
           <el-row :gutter="10" class="imgTitleRow" >
                 <el-col class="inputSpan" :span="3">
                  <span >标题：</span>
@@ -55,8 +55,8 @@
                 <el-col :span="19">
                   <el-input v-model="item.title" placeholder="请输入内容"></el-input>
                 </el-col>
-                <el-col :span="2" v-show="deleteIndexImg">
-              <el-button icon="el-icon-close"   size="mini" circle class="deleteBtn" @click="deleteIndexImg(index)" ></el-button>
+                <el-col :span="2" v-show="deleteIndexImgs">
+              <el-button icon="el-icon-close"   size="mini" circle class="deleteBtn" @click="deleteIndexImg(item.ID)" ></el-button>
                 </el-col>
               </el-row>
            <el-image class="index_img" :src="item.url" fit="cover"></el-image>
@@ -70,8 +70,8 @@ export default {
   name: "setIndex",
   data: function() {
     return {
-      carousel_img: [],
-      index_img: [],
+      carousel_img: new this.$dataModel(["ID","showType","title","url"],"ID"),
+      index_img: new this.$dataModel(["ID","title","url"],"ID"),
       device: [
         {
           value: "pc",
@@ -94,10 +94,10 @@ export default {
         "title":"",
         "url":""
       }
-      this.carousel_img.push(newImg);
+      this.carousel_img.newData(newImg,0);
     },
-    deleteCarouselImg:function(index){
-    this.carousel_img.splice(index,1);
+    deleteCarouselImg:function(ID){
+    this.carousel_img.deleteByID(ID);
 
     },
     addIndexImg:function(){
@@ -106,10 +106,13 @@ export default {
         "title":"",
         "url":""
       }
-      this.index_img.push(newImg);
+      this.index_img.newData(newImg,0);
     },
-    deleteIndexImg:function(index){
-      this.index_img.splice(index,1);
+    deleteIndexImg:function(ID){
+      this.index_img.deleteByID(ID);
+    },
+    saveCarousels:function(){
+       console.log(this.carousel_img.getChangedData())
     }
   },
   created() {
@@ -118,7 +121,7 @@ export default {
       .get(this.$store.state.getCarouselImg)
       .then(function(res) {
         if (res.data) {
-          me.carousel_img = res.data;
+          me.carousel_img.loadData( res.data);
         }
       })
       .catch(function(error) {
@@ -132,7 +135,7 @@ export default {
       .get(this.$store.state.getIndexImg)
       .then(function(res) {
         if (res.data) {
-          me.index_img = res.data;
+          me.index_img.loadData(res.data);
         }
       })
       .catch(function(error) {

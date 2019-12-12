@@ -197,11 +197,11 @@ export default class dataModel {
     getChangedData(){
         let changedDatas=[];
         changedDatas= this.deleteDatas.map((value)=>{
-            return value.jsonData;
+            return value;
            })
            this.datas.forEach(value=>{
                if(value.state=="new"||value.state=="edit"){
-                changedDatas.push(value.jsonData); 
+                changedDatas.push(value); 
                }
            }) 
            if(changedDatas.length==0){

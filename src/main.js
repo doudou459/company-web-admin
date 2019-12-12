@@ -6,10 +6,12 @@ import element from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import ajax from 'axios'
 import md5 from 'js-md5'
+import dataModel from "./js/dataModel"
 Vue.config.productionTip = false
 Vue.use(element)
 Vue.prototype.$md5 = md5
 Vue.prototype.$ajax = ajax
+Vue.prototype.$dataModel=dataModel
 new Vue({
   router,
   store,
