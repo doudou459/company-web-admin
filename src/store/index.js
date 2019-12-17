@@ -11,7 +11,7 @@ export default new Vuex.Store({
     loginTime:"",
     loginUrl:"http://localhost/doLogin",
     getCarouselImg:"http://localhost/getCarouselImgs",
-    getIndexImg:"http://localhost/getIndexImgs"
+    getIndexImg:"http://localhost/getIndexImgs",
   },
   mutations: {
     setUser(state,user){

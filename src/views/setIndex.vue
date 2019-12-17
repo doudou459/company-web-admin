@@ -12,12 +12,12 @@
         </el-row>
       </div>
       <el-row :gutter="20" class="carousel_imgRow">
-        <el-col v-for="item in carousel_img.datas" v-bind:key="item.ID" :span="8">    
-          <el-row :gutter="10" class="imgTitleRow" >
+        <el-col v-for="item in carousel_img.datas" v-bind:key="item.ID" :span="8">
+          <el-row :gutter="10" class="imgTitleRow">
             <el-col :span="18">
               <el-row>
                 <el-col class="inputSpan" :span="3">
-                 <span >标题：</span>
+                  <span>标题：</span>
                 </el-col>
                 <el-col :span="21">
                   <el-input v-model="item.title" placeholder="请输入内容"></el-input>
@@ -30,13 +30,28 @@
               </el-select>
             </el-col>
             <el-col :span="2" v-show="deleteCarousel">
-              <el-button icon="el-icon-close"   size="mini" circle class="deleteBtn" @click="deleteCarouselImg(item.ID)" ></el-button>
+              <el-button
+                icon="el-icon-close"
+                size="mini"
+                circle
+                class="deleteBtn"
+                @click="deleteCarouselImg(item.ID)"
+              ></el-button>
             </el-col>
           </el-row>
-           <el-image class="carousel_img" :src="item.url" fit="cover"></el-image>
+          <el-upload
+            action="http://localhost/uploadImg"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+            name="pictureImg"
+            limit=1
+            >
+            <el-image class="carousel_img" :src="item.url?item.url:noPic" fit="cover"></el-image>
+          </el-upload>
         </el-col>
       </el-row>
-     <div class="topDiv">
+      <div class="topDiv">
         <h3>设置主页图</h3>
         <el-row type="flex">
           <el-col :span="4">
@@ -46,20 +61,35 @@
           </el-col>
         </el-row>
       </div>
-      <el-row :gutter="20" >
-        <el-col v-for="item in index_img.datas" v-bind:key="item.ID" :span="8">    
-          <el-row :gutter="10" class="imgTitleRow" >
-                <el-col class="inputSpan" :span="3">
-                 <span >标题：</span>
-                </el-col>
-                <el-col :span="19">
-                  <el-input v-model="item.title" placeholder="请输入内容"></el-input>
-                </el-col>
-                <el-col :span="2" v-show="deleteIndexImgs">
-              <el-button icon="el-icon-close"   size="mini" circle class="deleteBtn" @click="deleteIndexImg(item.ID)" ></el-button>
-                </el-col>
-              </el-row>
-           <el-image class="index_img" :src="item.url" fit="cover"></el-image>
+      <el-row :gutter="20">
+        <el-col v-for="item in index_img.datas" v-bind:key="item.ID" :span="8">
+          <el-row :gutter="10" class="imgTitleRow">
+            <el-col class="inputSpan" :span="3">
+              <span>标题：</span>
+            </el-col>
+            <el-col :span="19">
+              <el-input v-model="item.title" placeholder="请输入内容"></el-input>
+            </el-col>
+            <el-col :span="2" v-show="deleteIndexImgs">
+              <el-button
+                icon="el-icon-close"
+                size="mini"
+                circle
+                class="deleteBtn"
+                @click="deleteIndexImg(item.ID)"
+              ></el-button>
+            </el-col>
+          </el-row>
+          <el-upload
+            action="http://localhost/uploadImg"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+            name="pictureImg"
+            limit=1
+            >
+            <el-image class="index_img" :src="item.url?item.url:noPic" fit="cover"></el-image>
+          </el-upload>
         </el-col>
       </el-row>
     </el-main>
@@ -70,8 +100,12 @@ export default {
   name: "setIndex",
   data: function() {
     return {
-      carousel_img: new this.$dataModel(["ID","showType","title","url"],"ID"),
-      index_img: new this.$dataModel(["ID","title","url"],"ID"),
+      noPic:require('../assets/nopic.png'),
+      carousel_img: new this.$dataModel(
+        ["ID", "showType", "title", "url"],
+        "ID"
+      ),
+      index_img: new this.$dataModel(["ID", "title", "url"], "ID"),
       device: [
         {
           value: "pc",
@@ -82,38 +116,44 @@ export default {
           label: "移动端"
         }
       ],
-      deleteCarousel:false,
-      deleteIndexImgs:false,
+      deleteCarousel: false,
+      deleteIndexImgs: false
     };
   },
-  methods:{
-    addCarousel:function(){
+  methods: {
+    addCarousel: function() {
       let newImg = {
-        "ID":new Date().getTime(),
-        "showType":"pc",
-        "title":"",
-        "url":""
-      }
-      this.carousel_img.newData(newImg,0);
+        ID: new Date().getTime(),
+        showType: "pc",
+        title: "",
+        url: ""
+      };
+      this.carousel_img.newData(newImg, 0);
     },
-    deleteCarouselImg:function(ID){
-    this.carousel_img.deleteByID(ID);
-
+    deleteCarouselImg: function(ID) {
+      this.carousel_img.deleteByID(ID);
     },
-    addIndexImg:function(){
+    addIndexImg: function() {
       let newImg = {
-        "ID":new Date().getTime(),
-        "title":"",
-        "url":""
-      }
-      this.index_img.newData(newImg,0);
+        ID: new Date().getTime(),
+        title: "",
+        url: ""
+      };
+      this.index_img.newData(newImg, 0);
     },
-    deleteIndexImg:function(ID){
+    deleteIndexImg: function(ID) {
       this.index_img.deleteByID(ID);
     },
-    saveCarousels:function(){
-       console.log(this.carousel_img.getChangedData())
+    saveCarousels: function() {
+      console.log(this.carousel_img.getChangedData());
+    },
+    handleAvatarSuccess:function(){
+
+    },
+    beforeAvatarUpload:function(){
+
     }
+
   },
   created() {
     let me = this;
@@ -121,7 +161,7 @@ export default {
       .get(this.$store.state.getCarouselImg)
       .then(function(res) {
         if (res.data) {
-          me.carousel_img.loadData( res.data);
+          me.carousel_img.loadData(res.data);
         }
       })
       .catch(function(error) {
@@ -157,46 +197,53 @@ export default {
   padding-bottom: 10px;
 }
 .carousel_img {
+  cursor: pointer;
   width: 100%;
   height: 240px;
-  margin-top:5px;
-  margin-bottom: 10px;
   display: block;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  border-radius:20px;
 }
-.index_img{
+
+
+.index_img {
+  cursor: pointer;
   width: 100%;
   height: 300px;
-  margin-top:5px;
+  margin-top: 5px;
   margin-bottom: 10px;
-  display: block;   
+  display: block;
+  border-radius:20px;
 }
 .deviceSelect {
   width: 100px;
   float: left;
 }
-.inputSpan{
-     padding-top:8px;
-     text-align: right;
+.inputSpan {
+  padding-top: 8px;
+  text-align: right;
 }
-.imgTitleRow{
-    margin-top:10px;
+.imgTitleRow {
+  margin-top: 10px;
 }
-.carousel_imgRow{
-    border-bottom-style: inset;
-    border-bottom-width: 5px;
-    /* max-height: 600px;
+.carousel_imgRow {
+  border-bottom-style: inset;
+  border-bottom-width: 5px;
+  /* max-height: 600px;
     overflow-y: scroll; */
-    border-bottom-color:#545c64;
+  border-bottom-color: #545c64;
 }
-.deleteBtn{
-  margin-top:5px;
+.deleteBtn {
+  margin-top: 5px;
   margin-left: 10px;
-  color: red!important;
+  color: red !important;
   font-size: 14px;
-  background-color:#E9EEF3;
-  border: #E9EEF3;
+  background-color: #e9eef3;
+  border: #e9eef3;
 }
-.deleteBtn:active,.deleteBtn:hover{
-  background-color:orange;
+.deleteBtn:active,
+.deleteBtn:hover {
+  background-color: orange;
 }
 </style>
