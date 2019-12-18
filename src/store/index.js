@@ -9,9 +9,9 @@ export default new Vuex.Store({
     clientHeight:document.documentElement.clientHeight,
     loginID:"",
     loginTime:"",
-    loginUrl:"http://localhost/doLogin",
-    getCarouselImg:"http://localhost/getCarouselImgs",
-    getIndexImg:"http://localhost/getIndexImgs",
+    loginUrl:"/service/doLogin",
+    getCarouselImg:"/service/getCarouselImgs",
+    getIndexImg:"/service/getIndexImgs",
   },
   mutations: {
     setUser(state,user){

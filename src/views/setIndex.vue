@@ -45,7 +45,6 @@
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
             name="pictureImg"
-            limit=1
             >
             <el-image class="carousel_img" :src="item.url?item.url:noPic" fit="cover"></el-image>
           </el-upload>
@@ -81,12 +80,11 @@
             </el-col>
           </el-row>
           <el-upload
-            action="http://localhost/uploadImg"
+            action="/service/uploadImg"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
             name="pictureImg"
-            limit=1
             >
             <el-image class="index_img" :src="item.url?item.url:noPic" fit="cover"></el-image>
           </el-upload>
