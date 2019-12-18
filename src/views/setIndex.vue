@@ -40,13 +40,13 @@
             </el-col>
           </el-row>
           <el-upload
-            action="http://localhost/uploadImg"
+            action="/service/uploadImg"
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
             name="pictureImg"
             >
-            <el-image class="carousel_img" :src="item.url?item.url:noPic" fit="cover"></el-image>
+            <el-image class="carousel_img" :src="item.url?downloadUrl+item.url:noPic" @click="getOwnerID(item.ID,1)" fit="cover"></el-image>
           </el-upload>
         </el-col>
       </el-row>
@@ -86,7 +86,7 @@
             :before-upload="beforeAvatarUpload"
             name="pictureImg"
             >
-            <el-image class="index_img" :src="item.url?item.url:noPic" fit="cover"></el-image>
+            <el-image class="index_img" :src="item.url?downloadUrl+item.url:noPic" @click="getOwnerID(item.ID,2)" fit="cover"></el-image>
           </el-upload>
         </el-col>
       </el-row>
@@ -115,7 +115,9 @@ export default {
         }
       ],
       deleteCarousel: false,
-      deleteIndexImgs: false
+      deleteIndexImgs: false,
+      operateObject:{"ID":"","key":1},
+      downloadUrl:this.$store.state.downloadImg
     };
   },
   methods: {
@@ -145,11 +147,29 @@ export default {
     saveCarousels: function() {
       console.log(this.carousel_img.getChangedData());
     },
-    handleAvatarSuccess:function(){
-
+    handleAvatarSuccess:function(res){
+      if(this.operateObject.key==1){
+        this.carousel_img.setValueByID("url",res,this.operateObject.ID);
+      }else if(this.operateObject.key==2){
+       this.index_img.setValueByID("url",res,this.operateObject.ID);
+      }
+      
     },
-    beforeAvatarUpload:function(){
+    beforeAvatarUpload:function(file){
+        const isJPG = file.type === 'image/jpeg'||file.type === 'image/png';
+        const isLt5M = file.size / 1024 / 1024 < 5;
 
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG或 png 格式!');
+        }
+        if (!isLt5M) {
+          this.$message.error('上传头像图片大小不能超过 5MB!');
+        }
+        return isJPG && isLt5M;
+    },
+    getOwnerID:function(ID,n){
+          this.operateObject.ID=ID;
+          this.operateObject.key=n;
     }
 
   },
