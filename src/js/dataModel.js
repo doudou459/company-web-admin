@@ -324,18 +324,18 @@ export default class dataModel {
     let changedDatas = [];
     changedDatas = this.deleteDatas.map((value) => {
       let json = {
-        'userDatasRowID': value.userDatasRowID,
-        'userOperateState': value.userOperateState,
-        'myLoadJsonDatas': value.myLoadJsonDatas
+        'ID': value.userDatasRowID,
+        'state': value.userOperateState,
+        'jsonData': value.myLoadJsonDatas
       }
       return json;
     })
     this.datas.forEach(value => {
       if (value.userOperateState == "new" || value.userOperateState == "edit") {
         let json = {
-          'userDatasRowID': value.userDatasRowID,
-          'userOperateState': value.userOperateState,
-          'myLoadJsonDatas': value.myLoadJsonDatas
+          'ID': value.userDatasRowID,
+          'state': value.userOperateState,
+          'jsonData': value.myLoadJsonDatas
         }
         changedDatas.push(json);
       }

@@ -45,8 +45,13 @@
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
             name="pictureImg"
-            >
-            <el-image class="carousel_img" :src="item.url?downloadUrl+item.url:noPic" @click="getOwnerID(item.ID,1)" fit="cover"></el-image>
+          >
+            <el-image
+              class="carousel_img"
+              :src="(item.url&&item.url!='none')?downloadUrl+item.url:noPic"
+              @click="getOwnerID(item.ID,1)"
+              fit="cover"
+            ></el-image>
           </el-upload>
         </el-col>
       </el-row>
@@ -56,7 +61,7 @@
           <el-col :span="4">
             <el-button @click="addIndexImg" type="primary">新增</el-button>
             <el-button @click="deleteIndexImgs=deleteIndexImgs?false:true" type="warning">删除</el-button>
-            <el-button type="info">保存</el-button>
+            <el-button @click="saveIndexImgs" type="info">保存</el-button>
           </el-col>
         </el-row>
       </div>
@@ -85,8 +90,13 @@
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
             name="pictureImg"
-            >
-            <el-image class="index_img" :src="item.url?downloadUrl+item.url:noPic" @click="getOwnerID(item.ID,2)" fit="cover"></el-image>
+          >
+            <el-image
+              class="index_img"
+              :src="(item.url&&item.url!='none')?downloadUrl+item.url:noPic"
+              @click="getOwnerID(item.ID,2)"
+              fit="cover"
+            ></el-image>
           </el-upload>
         </el-col>
       </el-row>
@@ -98,7 +108,7 @@ export default {
   name: "setIndex",
   data: function() {
     return {
-      noPic:require('../assets/nopic.png'),
+      noPic: require("../assets/nopic.png"),
       carousel_img: new this.$dataModel(
         ["ID", "showType", "title", "url"],
         "ID"
@@ -116,8 +126,8 @@ export default {
       ],
       deleteCarousel: false,
       deleteIndexImgs: false,
-      operateObject:{"ID":"","key":1},
-      downloadUrl:this.$store.state.downloadImg
+      operateObject: { ID: "", key: 1 },
+      downloadUrl: this.$store.state.downloadImg
     };
   },
   methods: {
@@ -145,40 +155,121 @@ export default {
       this.index_img.deleteByID(ID);
     },
     saveCarousels: function() {
-      console.log(this.carousel_img.getChangedData());
-    },
-    handleAvatarSuccess:function(res){
-      if(this.operateObject.key==1){
-        this.carousel_img.setValueByID("url",res,this.operateObject.ID);
-      }else if(this.operateObject.key==2){
-       this.index_img.setValueByID("url",res,this.operateObject.ID);
+      let me = this;
+      if (me.carousel_img.getChangedData() == "") {
+        return;
       }
-      
+      this.$ajax
+        .post(this.$store.state.saveCarouselData, {
+          loginID: localStorage.getItem("loginID"),
+          loginTime: localStorage.getItem("loginTime"),
+          carouselData: me.carousel_img.getChangedData()
+        })
+        .then(function(res) {
+          if (res.data.result == "success") {
+            localStorage.setItem("loginTime", res.data.loginTime);
+            me.carousel_img.acceptChanges();
+            me.$message({
+              showClose: true,
+              message: "保存成功",
+              type: "success"
+            });
+          } else if (res.data.result == "fail") {
+            localStorage.setItem("loginTime", res.data.loginTime);
+            me.$message({
+              showClose: true,
+              message: "保存失败",
+              type: "error"
+            });
+          } else {
+            me.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error"
+            });
+          }
+        })
+        .catch(function(error) {
+          me.$message({
+            showClose: true,
+            message: error,
+            type: "error"
+          });
+        });
     },
-    beforeAvatarUpload:function(file){
-        const isJPG = file.type === 'image/jpeg'||file.type === 'image/png';
-        const isLt5M = file.size / 1024 / 1024 < 5;
+    saveIndexImgs: function() {
+      let me = this;
+      if (me.index_img.getChangedData() == "") {
+        return;
+      }
+      this.$ajax
+        .post(this.$store.state.saveIndexData, {
+          loginID: localStorage.getItem("loginID"),
+          loginTime: localStorage.getItem("loginTime"),
+          indexImgData: me.index_img.getChangedData()
+        })
+        .then(function(res) {
+          if (res.data.result == "success") {
+            localStorage.setItem("loginTime", res.data.loginTime);
+            me.index_img.acceptChanges();
+            me.$message({
+              showClose: true,
+              message: "保存成功",
+              type: "success"
+            });
+          } else if (res.data.result == "fail") {
+            localStorage.setItem("loginTime", res.data.loginTime);
+            me.$message({
+              showClose: true,
+              message: "保存失败",
+              type: "error"
+            });
+          } else {
+            me.$message({
+              showClose: true,
+              message: res.data.msg,
+              type: "error"
+            });
+          }
+        })
+        .catch(function(error) {
+          me.$message({
+            showClose: true,
+            message: error,
+            type: "error"
+          });
+        });
+    },
+    handleAvatarSuccess: function(res) {
+      if (this.operateObject.key == 1) {
+        this.carousel_img.setValueByID("url", res, this.operateObject.ID);
+      } else if (this.operateObject.key == 2) {
+        this.index_img.setValueByID("url", res, this.operateObject.ID);
+      }
+    },
+    beforeAvatarUpload: function(file) {
+      const isJPG = file.type === "image/jpeg" || file.type === "image/png";
+      const isLt5M = file.size / 1024 / 1024 < 5;
 
-        if (!isJPG) {
-          this.$message.error('上传头像图片只能是 JPG或 png 格式!');
-        }
-        if (!isLt5M) {
-          this.$message.error('上传头像图片大小不能超过 5MB!');
-        }
-        return isJPG && isLt5M;
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG或 png 格式!");
+      }
+      if (!isLt5M) {
+        this.$message.error("上传头像图片大小不能超过 5MB!");
+      }
+      return isJPG && isLt5M;
     },
-    getOwnerID:function(ID,n){
-          this.operateObject.ID=ID;
-          this.operateObject.key=n;
+    getOwnerID: function(ID, n) {
+      this.operateObject.ID = ID;
+      this.operateObject.key = n;
     }
-
   },
   created() {
     let me = this;
     this.$ajax
       .get(this.$store.state.getCarouselImg)
       .then(function(res) {
-        if (res.data) {
+        if (res.data && res.data.length > 0) {
           me.carousel_img.loadData(res.data);
         }
       })
@@ -192,7 +283,7 @@ export default {
     this.$ajax
       .get(this.$store.state.getIndexImg)
       .then(function(res) {
-        if (res.data) {
+        if (res.data && res.data.length > 0) {
           me.index_img.loadData(res.data);
         }
       })
@@ -221,9 +312,8 @@ export default {
   display: block;
   margin-top: 5px;
   margin-bottom: 10px;
-  border-radius:20px;
+  border-radius: 20px;
 }
-
 
 .index_img {
   cursor: pointer;
@@ -232,7 +322,7 @@ export default {
   margin-top: 5px;
   margin-bottom: 10px;
   display: block;
-  border-radius:20px;
+  border-radius: 20px;
 }
 .deviceSelect {
   width: 100px;

@@ -33,12 +33,14 @@ export default {
        loginKey:this.$md5(this.user.loginKey)  
      }).then(function(res){
         if(res.data.result=="success"){
-          me.$store.commit('setUser',{loginID:me.user.loginID,loginTime:res.data.loginTime})
+          localStorage.setItem("loginID",me.user.loginID);
+          localStorage.setItem("loginTime",res.data.loginTime);
           me.$message({
           showClose: true,
           message: '登录成功',
           type: 'success'
         });
+        me.$router.push("/contents/setIndex");
         }else if(res.data.result=="wrongKey"){
           me.$message({
           showClose: true,
