@@ -270,11 +270,11 @@ export default {
   margin-top: 10px;
 }
 .imgRow {
-  border-bottom-style: inset;
+  /* border-bottom-style: inset;
   border-bottom-width: 5px;
   /* max-height: 600px;
     overflow-y: scroll; */
-  border-bottom-color: #545c64;
+  /* border-bottom-color: #545c64; */ 
 }
 .deleteBtn {
   margin-top: 5px;

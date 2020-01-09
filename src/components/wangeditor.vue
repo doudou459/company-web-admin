@@ -19,11 +19,16 @@ export default {
           type:Number,
           required:true,
           default: 200,
+        },
+        newContent:{
+          type:String,
+          required:true,
+          default: "",
         }
     },
     data:function(){
       return{
-          editorContent:""
+         editorContent:this.newContent
       }  
     },
     mounted(){
@@ -48,7 +53,8 @@ export default {
        this.editorContent=html;
     }   
      editor.create();
-
+     editor.txt.html(this.editorContent);
+     editor.change();
     }
 }
 </script>
