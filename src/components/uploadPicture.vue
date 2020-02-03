@@ -10,7 +10,7 @@
         </el-col>
       </el-row>
     </div>
-    <el-row :gutter="20" class="imgRow">
+    <el-row :gutter="20" >
       <el-col v-for="item in pictureData.datas" v-bind:key="item[IDcolName]" :span="8">
         <el-row :gutter="10" class="imgTitleRow">
           <el-col :span="showDevice?18:22">
@@ -269,13 +269,7 @@ export default {
 .imgTitleRow {
   margin-top: 10px;
 }
-.imgRow {
-  /* border-bottom-style: inset;
-  border-bottom-width: 5px;
-  /* max-height: 600px;
-    overflow-y: scroll; */
-  /* border-bottom-color: #545c64; */ 
-}
+
 .deleteBtn {
   margin-top: 5px;
   margin-left: 10px;

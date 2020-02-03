@@ -13,6 +13,7 @@ export default new Vuex.Store({
     getCarouselImg:"/service/getCarouselImgs",//获取轮播图数据请求地址
     getIndexImg:"/service/getIndexImgs",//获取首页图片数据请求地址
     downloadImg:"/service/downloadImg?fileName=",//下载图片的请求地址
+    uploadImg:"/service/uploadImg",
     saveCarouselData:"/service/saveCarouselImg",//保存轮播图数据的请求地址
     saveIndexData:"/service/saveIndexImg"//保存首页图片数据的请求地址
   },

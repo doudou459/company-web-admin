@@ -1,5 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+const routerPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error=> error)
+}
 import login from '../views/login.vue'
 import contents from'../views/contents.vue'
 import setIndex from'../views/setIndex.vue'
