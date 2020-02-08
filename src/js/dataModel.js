@@ -80,7 +80,7 @@ export default class dataModel {
               let json = createModelRow(labels,countLabels);
               json.userDatasRowID = value[idName];
               for (var key in value) {
-                if (!value.hasOwnProperty(key)) { continue };//跳过继承的属性
+                if (!value.hasOwnProperty(key)) { continue }//跳过继承的属性
                 if (labels.indexOf(key) >= 0) {
                   json.myLoadJsonDatas[key] = value[key];
                 } else if (countLabels.indexOf(key) >= 0) {
@@ -97,7 +97,7 @@ export default class dataModel {
               let json = createModelRow(labels,countLabels);
               json.userDatasRowID = value[idName];
               for (var key in value) {
-                if (!value.hasOwnProperty(key)) { continue };//跳过继承的属性
+                if (!value.hasOwnProperty(key)) { continue }//跳过继承的属性
                 if (labels.indexOf(key) >= 0) {
                   json.myLoadJsonDatas[key] = value[key];
                 } else if (countLabels.indexOf(key) >= 0) {
@@ -119,7 +119,7 @@ export default class dataModel {
           let json = createModelRow(labels, countLabels);
           json.userDatasRowID = value[idName];
           for (var key in value) {
-            if (!value.hasOwnProperty(key)) { continue };//跳过继承的属性
+            if (!value.hasOwnProperty(key)) { continue }//跳过继承的属性
             json.myLoadJsonDatas[key] = value[key];
           }
           json.userOperateState='stable';
@@ -242,8 +242,6 @@ export default class dataModel {
           alert("the value of " + idName + " is used")
           return "the value of " + idName + " is used";
         }
-        let labels = this.labels;
-        let countLabels = this.countLabels;
         let newJson = {
           'userDatasRowID': json[idName],
           'userOperateState': 'new',
@@ -275,7 +273,7 @@ export default class dataModel {
           })
         }
         for (var key in json) {
-          if (!json.hasOwnProperty(key)) { continue };//跳过继承的属性
+          if (!json.hasOwnProperty(key)) { continue }//跳过继承的属性
           //循环体
           if (this.labels.indexOf(key) >= 0) {
             newJson.myLoadJsonDatas[key] = json[key];
