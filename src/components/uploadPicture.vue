@@ -49,7 +49,7 @@
             class="c_img"
             :src="getImgUrl(item[urlColName])"
             @click="getOwnerID(item[IDcolName])"
-            fit="cover"
+            fit="fill"
             :style='{"height":pictureHeight+"px"}'
           ></el-image>
         </el-upload>
